@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .chat-log {
+            height: 400px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .chat-message {
+            margin-bottom: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+        
+        /* Colores aleatorios para los nombres de usuario */
+        .username {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Chat Room: <span id="room-name" class="text-primary"></span></h1>
+        <div id="chat-log" class="chat-log bg-white"></div>
+        <div class="input-group mb-3">
+            <input id="chat-message-input" type="text" class="form-control" placeholder="Escribe tu mensaje..." aria-label="Escribe tu mensaje..." aria-describedby="send-button">
+            <button id="chat-message-submit" class="btn btn-primary" type="button" id="send-button">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        // Generar un color aleatorio consistente basado en el nombre de usuario (esto debe dar siempre el mismo color)
+        function getColorFromUsername(username) {
+            let hash = 0;
+            for (let i = 0; i < username.length; i++) {
+                hash = username.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            let color = '#';
+            for (let i = 0; i < 3; i++) {
+                const value = (hash >> (i * 8)) & 0xFF;
+                color += ('00' + value.toString(16)).slice(-2);
+            }
+            console.log("Color generado para", username, ":", color);  // Verificar el color generado
+            return color;
+        }
+
+        const roomName = "{{ room_name_json|safe }}";  // Asumiendo que esta variable proviene del backend
+        const username = new URLSearchParams(window.location.search).get('username');
+        const userColor = getColorFromUsername(username);  // Obtiene el color consistente para el usuario
+
+        console.log("Color a enviar:", userColor);  // Verificar el color antes de enviarlo
+
+        const chatSocket = new WebSocket(
+            (window.location.protocol === 'https:' ? 'wss://' : 'ws://')
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chat-message');
+            
+            const usernameElement = document.createElement('span');
+            usernameElement.textContent = `${data.username}: `;
+            usernameElement.classList.add('username');
+            
+            console.log("Color recibido:", data.color);  // Verificar el color recibido
+            if (data.color) {  // Si el color es recibido correctamente
+                usernameElement.style.color = data.color;  // Usar el color que el servidor asignó al usuario
+            } else {
+                console.error("Color no recibido.");
+            }
+
+            messageElement.appendChild(usernameElement);
+            
+            const messageContent = document.createElement('span');
+            messageContent.textContent = data.message;
+            messageElement.appendChild(messageContent);
+
+            document.querySelector('#chat-log').appendChild(messageElement);
+            
+            // Hacer que la vista se desplace hacia abajo automáticamente
+            const chatLog = document.querySelector('#chat-log');
+            chatLog.scrollTop = chatLog.scrollHeight;
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            console.log("Enviando mensaje:", message, "con color:", userColor);  // Verificar el mensaje y el color que se envía
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'username': username,
+                'color': userColor  // Enviar el color calculado junto con el mensaje
+            }));
+            messageInputDom.value = '';
+        };
+
+        document.querySelector('#room-name').textContent = roomName;
+    </script>
+
+    <!-- Bootstrap JS (opcional, para algunas interacciones) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
