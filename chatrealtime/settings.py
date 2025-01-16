@@ -12,9 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -28,7 +28,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'channels',
     'accounts',
-    'home',
     'chat',
 ]
 
@@ -126,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LOGIN_URL = 'login'  # Ruta para redirigir al login si no está autenticado
-LOGIN_REDIRECT_URL = 'home'  # Redirección tras el login
+LOGIN_REDIRECT_URL = 'chat'  # Redirección tras el login
 LOGOUT_REDIRECT_URL = 'login'  # Redirección tras el logout
 
 SESSION_COOKIE_NAME = 'realtime_sessionid'
@@ -147,7 +146,7 @@ STATIC_URL = '/static/'
 
 # En desarrollo, cuando DEBUG es True
 if DEBUG:
-    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'home', 'static')]
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'chat', 'static')]
 else:
     # En producción, cuando DEBUG es False
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Carpeta estática raíz
