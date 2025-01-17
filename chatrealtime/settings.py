@@ -68,6 +68,7 @@ ASGI_APPLICATION = 'chatrealtime.asgi.application'
 
 
 REDIS_URL = os.environ.get('REDIS_URL')
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS')
 
 # Configuración de Redis
 CACHES = {
@@ -129,7 +130,7 @@ LOGIN_REDIRECT_URL = 'index'  # Redirección tras el login
 LOGOUT_REDIRECT_URL = 'login'  # Redirección tras el logout
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://chatrealtime-57jv.onrender.com'
+    CSRF_TRUSTED_ORIGINS
 ]
 
 SESSION_COOKIE_NAME = 'realtime_sessionid'
