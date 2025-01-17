@@ -125,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LOGIN_URL = 'login'  # Ruta para redirigir al login si no está autenticado
-LOGIN_REDIRECT_URL = 'chat'  # Redirección tras el login
+LOGIN_REDIRECT_URL = 'index'  # Redirección tras el login
 LOGOUT_REDIRECT_URL = 'login'  # Redirección tras el logout
 
 SESSION_COOKIE_NAME = 'realtime_sessionid'
