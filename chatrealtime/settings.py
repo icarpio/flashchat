@@ -128,6 +128,10 @@ LOGIN_URL = 'login'  # Ruta para redirigir al login si no está autenticado
 LOGIN_REDIRECT_URL = 'index'  # Redirección tras el login
 LOGOUT_REDIRECT_URL = 'login'  # Redirección tras el logout
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://chatrealtime-57jv.onrender.com',  # Tu dominio de producción
+]
+
 SESSION_COOKIE_NAME = 'realtime_sessionid'
 
 # Internationalization
