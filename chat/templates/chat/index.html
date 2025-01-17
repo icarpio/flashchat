@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Rooms</title>
@@ -20,51 +21,35 @@
     </style>
 </head>
 <body>
-
     <div class="container mt-5">
+        <div class="text-center">
+            <img src="{% static 'logo.png' %}" alt="Logo">
+        </div>
         <h1 class="text-center">Chat Rooms</h1>
-
-        <!-- Formulario para ingresar el nombre de usuario -->
-        <div class="form-group">
-            <label for="username-input">Username:</label>
-            <input id="username-input" type="text" class="form-control" placeholder="Enter your username">
+        <!-- Mostrar el nombre de usuario autenticado -->
+        <div class="text-center">
+            <p>Logged in as: <strong id="username-display">{{ username }}</strong></p>
         </div>
-
-        <!-- Botón para enviar el nombre de usuario -->
+        <!-- Botón para mostrar las salas -->
         <div class="text-center mt-3">
-            <button id="username-submit" class="btn btn-primary">Submit Username</button>
+            <button id="show-rooms" class="btn btn-primary">Show Rooms</button>
         </div>
 
-            <!-- Botones para las salas (inicialmente ocultos) -->
-        <div id="room-buttons" class="text-center">
+       <!-- Botones para las salas (inicialmente ocultos) -->
+        <div id="room-buttons" class="text-center" style="display: none;">
             <h3>Select a Room</h3>
-            <div>
-                <button class="room-button btn btn-secondary btn-block" data-room="room1">Room 1</button>
-                <button class="room-button btn btn-secondary btn-block" data-room="room2">Room 2</button>
-                <button class="room-button btn btn-secondary btn-block" data-room="room3">Room 3</button>
-                <button class="room-button btn btn-secondary btn-block" data-room="room4">Room 4</button>
-            </div>
-            <div>
-                <button class="room-button btn btn-secondary btn-block" data-room="room5">Room 5</button>
-                <button class="room-button btn btn-secondary btn-block" data-room="room6">Room 6</button>
-                <button class="room-button btn btn-secondary btn-block" data-room="room7">Room 7</button>
-                <button class="room-button btn btn-secondary btn-block" data-room="room8">Room 8</button>
-            </div>
-            <div>
-                <button class="room-button btn btn-secondary btn-block" data-room="room9">Room 9</button>
-                <button class="room-button btn btn-secondary btn-block" data-room="room10">Room 10</button>
-                <button class="room-button btn btn-secondary btn-block" data-room="room11">Room 11</button>
-                <button class="room-button btn btn-secondary btn-block" data-room="room12">Room 12</button>
-            </div>
-            <div>
-                <button class="room-button btn btn-secondary btn-block" data-room="room13">Room 13</button>
-                <button class="room-button btn btn-secondary btn-block" data-room="room14">Room 14</button>
-                <button class="room-button btn btn-secondary btn-block" data-room="room15">Room 15</button>
-                <button class="room-button btn btn-secondary btn-block" data-room="room16">Room 16</button>
-            </div>
+            {% for room in rooms %}
+                {% if forloop.first or forloop.counter0|divisibleby:3 %}
+                <div>
+                {% endif %}
+                    <button class="room-button btn btn-secondary btn-block" data-room="{{ room.identifier }}">
+                        {{ room.name }}
+                    </button>
+                {% if forloop.counter|divisibleby:3 or forloop.last %}
+                </div>
+                {% endif %}
+            {% endfor %}
         </div>
-
-       
     </div>
 
     <!-- Enlace a Bootstrap JS y dependencias (Popper.js) -->
@@ -72,27 +57,24 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
     <script>
-        // Manejar el evento de envío del nombre de usuario
-        document.querySelector('#username-submit').onclick = function() {
-            var username = document.querySelector('#username-input').value;
-
-            // Validar que el nombre de usuario no esté vacío
-            if (username.trim() === "") {
-                alert("Please enter a valid username.");
-                return;
+        // Mostrar las salas al hacer clic en "Show Rooms"
+        document.querySelector('#show-rooms').onclick = function() {
+            const roomButtons = document.querySelector('#room-buttons');
+            
+            // Comprobar el estado actual y alternarlo
+            if (roomButtons.style.display === 'block') {
+                roomButtons.style.display = 'none';  // Ocultar
+            } else {
+                roomButtons.style.display = 'block';  // Mostrar
             }
-
-            // Mostrar los botones de las salas
-            document.querySelector('#room-buttons').style.display = 'block';
         };
 
         // Cuando un botón de sala es clickeado
         document.querySelectorAll('.room-button').forEach(function(button) {
             button.onclick = function() {
                 var roomName = button.getAttribute('data-room'); // Obtener el nombre de la sala
-                var username = document.querySelector('#username-input').value; // Obtener el nombre de usuario
                 // Redirigir a la URL de la sala seleccionada
-                window.location.href = '/chat/' + roomName + '/?username=' + encodeURIComponent(username);
+                window.location.href = '/chat/' + roomName + '/';
             };
         });
     </script>

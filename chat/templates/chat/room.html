@@ -28,6 +28,7 @@
         }
     </style>
 </head>
+
 <body class="bg-light">
 
     <div class="container mt-5">
@@ -56,7 +57,7 @@
         }
 
         const roomName = "{{ room_name_json|safe }}";  // Asumiendo que esta variable proviene del backend
-        const username = new URLSearchParams(window.location.search).get('username');
+        const username = "{{ username }}";  // Aquí accedemos al nombre de usuario desde el backend
         const userColor = getColorFromUsername(username);  // Obtiene el color consistente para el usuario
 
         console.log("Color a enviar:", userColor);  // Verificar el color antes de enviarlo
@@ -115,7 +116,7 @@
             console.log("Enviando mensaje:", message, "con color:", userColor);  // Verificar el mensaje y el color que se envía
             chatSocket.send(JSON.stringify({
                 'message': message,
-                'username': username,
+                'username': username,  // Ahora utilizamos el username pasado desde Django
                 'color': userColor  // Enviar el color calculado junto con el mensaje
             }));
             messageInputDom.value = '';
