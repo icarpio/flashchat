@@ -14,8 +14,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-#ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
+
 
 
 # Application definition
@@ -129,7 +129,7 @@ LOGIN_REDIRECT_URL = 'index'  # Redirección tras el login
 LOGOUT_REDIRECT_URL = 'login'  # Redirección tras el logout
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://chatrealtime-57jv.onrender.com',  # Tu dominio de producción
+    'https://chatrealtime-57jv.onrender.com'
 ]
 
 SESSION_COOKIE_NAME = 'realtime_sessionid'
