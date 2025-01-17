@@ -23,13 +23,18 @@
 <body>
     <div class="container mt-5">
         <div class="text-center">
-            <img src="{% static 'logo.png' %}" alt="Logo">
+            <div class="text-center">
+                <img src="{% static 'logo.png' %}" alt="Logo" style="width: 60%;">
+            </div>
         </div>
+        <br>
         <h1 class="text-center">Chat Rooms</h1>
+        <br>
         <!-- Mostrar el nombre de usuario autenticado -->
         <div class="text-center">
             <p>Logged in as: <strong id="username-display">{{ username }}</strong></p>
         </div>
+        <br>
         <!-- Botón para mostrar las salas -->
         <div class="text-center mt-3">
             <button id="show-rooms" class="btn btn-primary">Show Rooms</button>
