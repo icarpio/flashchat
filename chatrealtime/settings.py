@@ -10,15 +10,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 SECRET_KEY = os.getenv('SECRET_KEY')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
+REDIS_URL = os.environ.get('REDIS_URL')
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
-
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -65,10 +62,6 @@ WSGI_APPLICATION = 'chatrealtime.wsgi.application'
 
 ASGI_APPLICATION = 'chatrealtime.asgi.application'
 
-
-
-REDIS_URL = os.environ.get('REDIS_URL')
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS')
 
 # Configuración de Redis
 CACHES = {

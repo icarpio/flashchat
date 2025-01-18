@@ -30,7 +30,7 @@
 </head>
 
 <body class="bg-light">
-
+   
     <div class="container mt-5">
         <h1 class="text-center mb-4">Chat Room: <span id="room-name" class="text-primary"></span></h1>
         <div id="chat-log" class="chat-log bg-white"></div>
@@ -41,6 +41,7 @@
     </div>
 
     <script>
+        
         // Generar un color aleatorio consistente basado en el nombre de usuario (esto debe dar siempre el mismo color)
         function getColorFromUsername(username) {
             let hash = 0;
@@ -52,7 +53,7 @@
                 const value = (hash >> (i * 8)) & 0xFF;
                 color += ('00' + value.toString(16)).slice(-2);
             }
-            console.log("Color generado para", username, ":", color);  // Verificar el color generado
+            //console.log("Color generado para", username, ":", color);  // Verificar el color generado
             return color;
         }
 
@@ -60,7 +61,7 @@
         const username = "{{ username }}";  // Aquí accedemos al nombre de usuario desde el backend
         const userColor = getColorFromUsername(username);  // Obtiene el color consistente para el usuario
 
-        console.log("Color a enviar:", userColor);  // Verificar el color antes de enviarlo
+        //console.log("Color a enviar:", userColor);  // Verificar el color antes de enviarlo
 
         const chatSocket = new WebSocket(
             (window.location.protocol === 'https:' ? 'wss://' : 'ws://')
@@ -69,6 +70,15 @@
             + roomName
             + '/'
         );
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let roomNameElement = document.getElementById("room-name");
+            if (roomNameElement) {
+                roomNameElement.textContent = "{{ room_name|escapejs }}";
+            } else {
+                console.error("El elemento #room-name no se encontró en el DOM.");
+            }
+        });
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
@@ -79,7 +89,7 @@
             usernameElement.textContent = `${data.username}: `;
             usernameElement.classList.add('username');
             
-            console.log("Color recibido:", data.color);  // Verificar el color recibido
+            //console.log("Color recibido:", data.color);  // Verificar el color recibido
             if (data.color) {  // Si el color es recibido correctamente
                 usernameElement.style.color = data.color;  // Usar el color que el servidor asignó al usuario
             } else {
@@ -113,7 +123,7 @@
         document.querySelector('#chat-message-submit').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value;
-            console.log("Enviando mensaje:", message, "con color:", userColor);  // Verificar el mensaje y el color que se envía
+            //console.log("Enviando mensaje:", message, "con color:", userColor);  // Verificar el mensaje y el color que se envía
             chatSocket.send(JSON.stringify({
                 'message': message,
                 'username': username,  // Ahora utilizamos el username pasado desde Django
@@ -122,7 +132,6 @@
             messageInputDom.value = '';
         };
 
-        document.querySelector('#room-name').textContent = roomName;
     </script>
 
     <!-- Bootstrap JS (opcional, para algunas interacciones) -->

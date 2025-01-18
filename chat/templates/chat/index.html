@@ -24,7 +24,7 @@
     <div class="container mt-5">
         <div class="text-center">
             <div class="text-center">
-                <img src="{% static 'logo.png' %}" alt="Logo" style="width: 60%;">
+                <img src="{% static 'logo.png' %}" alt="Logo" style="width: 80%;">
             </div>
         </div>
         <br>
@@ -42,7 +42,6 @@
 
        <!-- Botones para las salas (inicialmente ocultos) -->
         <div id="room-buttons" class="text-center" style="display: none;">
-            <h3>Select a Room</h3>
             {% for room in rooms %}
                 {% if forloop.first or forloop.counter0|divisibleby:3 %}
                 <div>
