@@ -2,14 +2,17 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 REDIS_URL = os.environ.get('REDIS_URL')
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS')
+
 
 DEBUG = False
 

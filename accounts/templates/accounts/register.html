@@ -54,7 +54,11 @@
                 <div class="card shadow-sm">
                     <div class="card-body p-4">
                         <div class="text-center">
-                            <img src="{% static 'logo.png' %}" alt="Logo" style="width: 80%;">
+                            <img src="{% static 'logo.png' %}" alt="Logo" style="width: 100%;">
+                        </div>
+                        <br>
+                        <div class="text-center">
+                            <h4 style="color: #6441A5;">Sign up</h4> <!-- Cambia #3498db por el color que quieras -->
                         </div>
                         <br>
                         <form method="post" id="registrationForm">
@@ -77,7 +81,9 @@
                                 <div class="text-danger small">{{ form.password2.errors }}</div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 mb-3">Sign Up</button>
+                             <button type="submit" class="btn btn-primary w-100 mb-3" style="background-color: #6441A5; color: white;">
+                                Sign up
+                            </button>
                         </form>
 
                         <div class="text-center">
