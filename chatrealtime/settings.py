@@ -1,20 +1,16 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-import cloudinary
 
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 REDIS_URL = os.environ.get('REDIS_URL')
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS')
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 INSTALLED_APPS = [
