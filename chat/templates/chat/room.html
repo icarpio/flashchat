@@ -42,26 +42,14 @@
     <div class="text-center">
         <script type="text/javascript">
             atOptions = {
-                'key' : '17173929aa05b5502e0a5c995c0c45e3',
+                'key' : '3b3322031ec5e1bfe5b235923c9cf9cc',
                 'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
+                'height' : 250,
+                'width' : 300,
                 'params' : {}
             };
         </script>
-        <script type="text/javascript" src="https://www.highperformanceformat.com/17173929aa05b5502e0a5c995c0c45e3/invoke.js"></script>
-    </div>
-    <div class="text-center">
-        <script type="text/javascript">
-            atOptions = {
-                'key' : '17173929aa05b5502e0a5c995c0c45e3',
-                'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="//www.highperformanceformat.com/17173929aa05b5502e0a5c995c0c45e3/invoke.js"></script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/3b3322031ec5e1bfe5b235923c9cf9cc/invoke.js"></script>
     </div>
     <script>
         
@@ -154,6 +142,17 @@
             }));
             messageInputDom.value = '';
         };
+        const chatLog = document.querySelector('#chat-log');
+
+        chatLog.addEventListener('click', function (event) {
+            if (event.target.classList.contains('username')) {
+                const clickedUser = event.target.textContent.replace(':', '').trim();
+                if (clickedUser !== username) {  // Evitar abrir chat consigo mismo
+                    const privateChatUrl = `/chat/private_chat/${username}_${clickedUser}/`;
+                    window.open(privateChatUrl, '_blank');  // Abre el chat privado en una nueva pestaña
+                }
+            }
+        });
 
     </script>
 
