@@ -6,6 +6,7 @@
     <title>Chat Room</title>
     <!-- Bootstrap CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         .chat-log {
             height: 400px;
@@ -26,6 +27,15 @@
         .username {
             font-weight: bold;
         }
+        .notification-btn {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+            border-radius: 5px;
+        }
     </style>
 </head>
 
@@ -38,18 +48,19 @@
             <input id="chat-message-input" type="text" class="form-control" placeholder="Escribe tu mensaje..." aria-label="Escribe tu mensaje..." aria-describedby="send-button">
             <button id="chat-message-submit" class="btn btn-primary" type="button" id="send-button">Enviar</button>
         </div>
+        <div id="notifications" class="notifications-container"></div>
     </div>
     <div class="text-center">
         <script type="text/javascript">
             atOptions = {
-                'key' : '3b3322031ec5e1bfe5b235923c9cf9cc',
+                'key' : '17173929aa05b5502e0a5c995c0c45e3',
                 'format' : 'iframe',
-                'height' : 100,
-                'width' : 300,
+                'height' : 50,
+                'width' : 320,
                 'params' : {}
             };
         </script>
-        <script type="text/javascript" src="//www.highperformanceformat.com/3b3322031ec5e1bfe5b235923c9cf9cc/invoke.js"></script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/17173929aa05b5502e0a5c995c0c45e3/invoke.js"></script>
     </div>
     <script>
         
@@ -134,7 +145,6 @@
         document.querySelector('#chat-message-submit').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value;
-            //console.log("Enviando mensaje:", message, "con color:", userColor);  // Verificar el mensaje y el color que se envía
             chatSocket.send(JSON.stringify({
                 'message': message,
                 'username': username,  // Ahora utilizamos el username pasado desde Django
@@ -153,6 +163,64 @@
                 }
             }
         });
+
+
+         //NOTIFICACIONES
+         const notificationSocket = new WebSocket(
+            (window.location.protocol === 'https:' ? 'wss://' : 'ws://') +
+            window.location.host +
+            '/ws/notifications/{{ username }}/'
+        );
+
+        notificationSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const sender = data.username;
+            const color = data.color || "#000000";  // Si no se recibe color, usar el valor por defecto (negro)
+        
+            console.log("📩 Nuevo mensaje de:", sender, "Color recibido:", color);  // Verifica el color aquí
+        
+            showNotification(sender, color);
+        };
+
+        function showNotification(sender, color) {
+            let notificationsDiv = document.getElementById("notifications");
+        
+            if (!notificationsDiv) {
+                console.error("🚨 No se encontró el div de notificaciones");
+                return;
+            }
+        
+            const currentUser = "{{ username }}";
+            const user1 = currentUser < sender ? currentUser : sender;
+            const user2 = currentUser > sender ? currentUser : sender;
+            const roomName = `${user1}_${user2}`;
+        
+            let button = document.createElement("button");
+            button.classList.add("notification-btn");
+
+            // Crear el elemento de icono de Font Awesome
+            let icon = document.createElement("i");
+            icon.className = "fas fa-comment"; // Cambia esto al icono que desees
+            icon.style.marginRight = "5px"; // Espacio entre el icono y el texto
+
+            // Añadir el icono al botón
+            button.appendChild(icon);
+
+            // Añadir el texto al botón
+            button.appendChild(document.createTextNode(sender));
+
+            // Aplicar color del usuario al botón
+            button.style.backgroundColor = color;
+            button.style.color = "#fff"; // Texto blanco para contraste
+        
+            button.onclick = function() {
+                window.open(`/chat/private_chat/${roomName}/`, '_blank');
+            };
+        
+            notificationsDiv.appendChild(button);
+        }
+
+     </script>
 
     </script>
 

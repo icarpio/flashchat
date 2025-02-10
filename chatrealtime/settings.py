@@ -74,6 +74,7 @@ CACHES = {
     }
 }
 
+
 # Si usas Django Channels
 CHANNEL_LAYERS = {
     'default': {

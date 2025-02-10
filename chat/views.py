@@ -27,6 +27,6 @@ def private_chat(request, user1, user2):
 
     return render(request, 'chat/private_chat.html', {
         'room_name': room_name,
-        'username': request.user.username,  # Debes estar seguro de que el usuario está autenticado
+        'username': request.user.username,  
         'user2':user2
     })
